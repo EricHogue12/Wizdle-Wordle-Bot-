@@ -12,6 +12,7 @@ class mainClass:
         print("Your second suggested word is RADIO")
         secondWord = input("Enter your second guess here: ")
         secondColors = input("Enter your colors in as a five digit number where 0=grey, 1=yellow, 2=green")
+        print("i dont even know")
 
 
 
