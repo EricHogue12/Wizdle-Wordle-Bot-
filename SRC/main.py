@@ -1,5 +1,5 @@
-import WordleTuple
-import FirstWords
+import SRC.WordleTuple as WordleTuple
+import SRC.FirstWords as FirstWords
 
 class mainClass:
 

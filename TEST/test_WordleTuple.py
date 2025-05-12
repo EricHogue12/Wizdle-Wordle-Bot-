@@ -1,5 +1,5 @@
 import pytest
-import WordleTuple
+import SRC.WordleTuple as WordleTuple
 
 def test_index_of():
     wordTest = WordleTuple.WordleTuple("a", "b", "c", "d")
