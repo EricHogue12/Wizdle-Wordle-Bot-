@@ -14,6 +14,7 @@ class FirstWords:
     def goodFirstWords(self, words: tuple):
         # list of frequencies
         freq1 = self.frequencies(words)
+
         # list of the five highest indices
         index1 = heapq.nlargest(5, range(len(freq1)), key=freq1.__getitem__)
         # the list of best words to return
