@@ -1,4 +1,4 @@
-import ValidWords
+import SRC.ValidWords as ValidWords
 
 # class which deals with the guesses that the user enters in that they made and which letters are yellow, green, or grey
 class WordGuess:
@@ -19,15 +19,15 @@ class WordGuess:
         
         for letter in colorString:
             if not letter.isalpha():
-                raise ValueError("user color input should only be letters")
+                raise ValueError("user color input should be only letters")
             if not (letter == "Y" or letter == "y" or letter == "G" or letter == "g" or letter == "B" or letter == "b"):
-                raise ValueError("user color input should only contain the letters G (green), Y (yellow), or B (black)")
+                raise ValueError("user color input should only contain the letters G -> green, Y -> yellow, or B -> black")
              
         self.wordS = wordString
         self.colorS = colorString
     
     # checks if the guess the user made was a valid five letter word
-    def validWord(self):
+    def valid_word(self):
         validWords = ValidWords.ValidWords().validWS
         word1 = self.wordS
         if word1 in validWords:

@@ -17,5 +17,15 @@ def test_length():
     wordTest = WordleTuple.WordleTuple("a", "b", "c", "d")
     assert wordTest.length() == 4
 
-
+def test_constructor():
+    # invalid case
+    with pytest.raises(TypeError, match="invalid list of words"):
+        WordleTuple.WordleTuple(1, 2, 3, 4)
+     
+    # valid case
+    wordTest = WordleTuple.WordleTuple("hi", "hello", "ciao")
+    assert wordTest.data[0] == "hi"
+    assert wordTest.data[1] == "hello"
+    assert wordTest.data[2] == "ciao"
+    
     
