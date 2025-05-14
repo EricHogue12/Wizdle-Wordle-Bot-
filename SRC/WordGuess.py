@@ -1,4 +1,4 @@
-import SRC.ValidWords as ValidWords
+import ValidWords as ValidWords
 
 # class which deals with the guesses that the user enters in that they made and which letters are yellow, green, or grey
 class WordGuess:
