@@ -3,6 +3,7 @@ import SRC.WordGuess as WordGuess
 class PossibleWords:
     
     # constructor intended for construction at the beginning of the main class before guesses are made
+    # ideally only one object is ever created
     def __init__(self, words: tuple):
         # converts the tuple into a list
         self.possible = list(words)
@@ -33,16 +34,17 @@ class PossibleWords:
         
         # removes all words from possible list that are not aligned with the green letters
         for i in range(len(self.greenletters)):
-            for j in range(len(self.possible)):
-                if not self.greenletters[i] == (self.possible[j])[self.greenindices[i]]:
-                    self.possible.remove(self.possible[j])
+            for pos in self.possible:
+                print(pos)
+                if not self.greenletters[i] == pos[self.greenindices[i]]:
+                    self.possible.remove(pos)
 
         
         # removes all words from possible list that include any black letters        
         for i in range(len(self.blackletters)):
-            for j in range(len(self.possible)):
-                if self.blackletters[i] in self.possible[j]:
-                    self.possible.remove(self.possible[j])
+            for pos in self.possible:
+                if self.blackletters[i] in pos:
+                    self.possible.remove(pos)
 
          
 

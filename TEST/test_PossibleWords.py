@@ -22,3 +22,11 @@ def test_update_letters():
     assert poss1.blackletters[1] == "a"
     assert poss1.blackindices[1] == 2
 
+def test_update_list():
+    # test for easy green and black cases
+    poss1 = PossibleWords.PossibleWords(("grate", "bonus", "raise", "amass", "cover", "phase"))
+    guess1 = WordGuess.WordGuess("broke", "bbbbg")
+    poss1.update_letters(guess1)
+    poss1.update_list(guess1)
+    assert len(poss1.possible) == 2
+
