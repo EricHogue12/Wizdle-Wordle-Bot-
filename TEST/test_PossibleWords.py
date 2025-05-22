@@ -8,11 +8,9 @@ def test_constructor():
     assert len(poss1.greenletters) == 0
     assert len(poss1.greenindices) == 0
     assert len(poss1.blackletters) == 0
-    assert len(poss1.blackindices) == 0
 
 def test_update_letters():
     poss1 = PossibleWords.PossibleWords(("flock", "donut", "shale"))
-    # tests for easy green and black cases
     guess1 = WordGuess.WordGuess("slate", "bgbbb")
     poss1.update_letters(guess1)
     assert len(poss1.greenletters) == 1
@@ -20,7 +18,21 @@ def test_update_letters():
     assert poss1.greenindices[0] == 1
     assert len(poss1.blackletters) == 4
     assert poss1.blackletters[1] == "a"
-    assert poss1.blackindices[1] == 2
+    
+    guess2 = WordGuess.WordGuess("forum", "bgyby")
+    poss1.update_letters(guess2)
+    assert len(poss1.greenletters) == 2
+    assert poss1.greenletters[1] == "o"
+    assert poss1.greenindices[0] == 1
+    assert len(poss1.blackletters) == 6
+    assert poss1.blackletters[4] == "f"
+    
+    # testing green letter duplicate case (same letter and index) and black letter duplicate case
+    guess3 = WordGuess.WordGuess("bogus", "bgbbb")
+    poss1.update_letters(guess3)
+    assert len(poss1.greenletters) == 2
+    assert len(poss1.blackletters) == 8
+
 
 def test_update_list():
     # test for easy green and black cases
@@ -29,4 +41,6 @@ def test_update_list():
     poss1.update_letters(guess1)
     poss1.update_list(guess1)
     assert len(poss1.possible) == 2
+
+    
 
