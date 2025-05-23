@@ -35,21 +35,39 @@ class PossibleWords:
                     self.greenletters.append(guess.wordS[i])
                     self.greenindices.append(i)
 
-        # updates yellow letters
+        # for special case where there are duplicate letters in guess where one is yellow and others are black
+        currentyellows = []
+
+        # updates new yellow letters
         for i in range(5):
             if guess.colorS[i] == "y":
-                self.yellowletters.append(guess.wordS[i])
-                self.yellowindices.append(i)
-
-        # special case for yellow letters when it should be added to yellow list but not black list
-        # (duplicate letters in guess that are misplaced but only one in word)
-            #TODO
+                currentyellows.append(guess.wordS[i])
+                # if the letter in the guess is already a yellow letter in the list
+                if guess.wordS[i] in self.yellowletters:
+                    dup = False
+                    # if the yellow letter in the guess has the same index as a yellow letter already in the list
+                    for j in range(len(self.yellowletters)):
+                        if self.yellowletters[j] == guess.wordS[i]:
+                            if self.yellowindices[j] == i:
+                                dup = True
+                    if dup == False:
+                        self.yellowletters.append(guess.wordS[i])
+                        self.yellowindices.append(i)
+                else:
+                    self.yellowletters.append(guess.wordS[i])
+                    self.yellowindices.append(i)
 
         # updates new black letters
         for i in range(5):
             if guess.colorS[i] == "b":
-                if not guess.wordS[i] in self.blackletters:
-                    self.blackletters.append(guess.wordS[i])
+                # for special case where there are duplicate letters in guess where one is yellow and others are black
+                # a duplicate letter that is black after a yellow should be treated as a yellow at the certain index
+                if guess.wordS[i] in currentyellows:
+                    self.yellowletters.append(guess.wordS[i])
+                    self.yellowindices.append(i)
+                else:
+                    if not guess.wordS[i] in self.blackletters:
+                        self.blackletters.append(guess.wordS[i])
     
 
 
@@ -80,6 +98,9 @@ class PossibleWords:
             for pos in self.possible:
                 if not self.yellowletters[i] in pos:
                     self.possible.remove(pos)
+
+        # special case (2 duplicate letters in guess where one is correctly placed and the other is misplaced)
+        # removes all words from possible list that only have the yellow letter in a green square
 
         
         
