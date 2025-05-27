@@ -7,6 +7,7 @@ class PossibleWords:
     def __init__(self, words: tuple):
         # converts the tuple into a list
         self.possible = list(words)
+
         self.greenletters = []
         self.yellowletters = []
         self.blackletters = []
@@ -14,6 +15,11 @@ class PossibleWords:
         # element of greenindices and so on
         self.greenindices = []
         self.yellowindices = []
+
+        # lists that keep track of any double/triple yellow letters
+        self.doubleyellows = []
+        self.tripleyellows = []
+
 
     # updates letters for the variables of the object
     def update_letters(self, guess: WordGuess):
@@ -34,8 +40,9 @@ class PossibleWords:
                 else:
                     self.greenletters.append(guess.wordS[i])
                     self.greenindices.append(i)
-
-        # for special case where there are duplicate letters in guess where one is yellow and others are black
+        
+        
+        
         currentyellows = []
 
         # updates new yellow letters
@@ -56,6 +63,19 @@ class PossibleWords:
                 else:
                     self.yellowletters.append(guess.wordS[i])
                     self.yellowindices.append(i)
+        
+        # for special case where there are multiple yellows of the same letter
+        for i in range(len(currentyellows)):
+            if currentyellows.count(currentyellows[i]) == 2:
+                if not currentyellows[i] in self.doubleyellows:
+                    self.doubleyellows.append(currentyellows[i])
+            if currentyellows.count(currentyellows[i]) == 3:
+                if not currentyellows[i] in self.tripleyellows:
+                    self.tripleyellows.append(currentyellows[i])
+            
+
+            
+
 
         # updates new black letters
         for i in range(5):
@@ -72,35 +92,97 @@ class PossibleWords:
 
 
     # updates the list of possible words in the wordle dictionary
-    def update_list(self, guess: WordGuess):
-        
+    def update_list(self):
+
+        removeset = set()
+
         # removes all words from possible list that are not aligned with the green letters
         for i in range(len(self.greenletters)):
             for pos in self.possible:
+                print(self.greenletters[i])
                 if not self.greenletters[i] == pos[self.greenindices[i]]:
-                    self.possible.remove(pos)
+                    removeset.add(pos)
 
         
+
         # removes all words from possible list that include any black letters        
         for i in range(len(self.blackletters)):
             for pos in self.possible:
                 if self.blackletters[i] in pos:
-                    self.possible.remove(pos)
+                    removeset.add(pos)
 
         # removes all words from possible list that have a letter in its yellow square
         for i in range(len(self.yellowletters)):
             for pos in self.possible:
                 if self.yellowletters[i] == pos[self.yellowindices[i]]:
-                    self.possible.remove(pos)
+                    removeset.add(pos)
         
         # removes all words from possible list that do no have a letter that is yellow
         for i in range(len(self.yellowletters)):
             for pos in self.possible:
                 if not self.yellowletters[i] in pos:
-                    self.possible.remove(pos)
+                    removeset.add(pos)
+
 
         # special case (2 duplicate letters in guess where one is correctly placed and the other is misplaced)
         # removes all words from possible list that only have the yellow letter in a green square
+        for i in range(len(self.yellowletters)):
+            for pos in self.possible:
+                if pos.count(self.yellowletters[i]) == 1:
+                    for j in range(len(self.greenletters)):
+                        if self.yellowletters[i] == self.greenletters[j]:
+                            removeset.add(pos)
+
+        # special case: duplicate yellows
+        # removes all words that do not have the necessary amount of the yellow letters
+        # checks for yellows that are being counted as greens
+        
+        for i in range(len(self.doubleyellows)):
+            for pos in self.possible:
+                if pos.count(self.doubleyellows[i]) < 2:
+                    removeset.add(pos)
+                if pos.count(self.doubleyellows[i]) == 2:
+                    for j in range(len(self.greenletters)):
+                        if self.doubleyellows[i] == self.greenletters[j]:
+                            removeset.add(pos)
+                counter = 0
+                if pos.count(self.doubleyellows[i]) > 2:
+                    for j in range(len(self.greenletters)):
+                        if self.doubleyellows[i] == self.greenletters[j]:
+                            counter += 1
+                    if (counter > 1):
+                        removeset.add(pos)
+
+        for i in range(len(self.tripleyellows)):
+            for pos in self.possible:
+                if pos.count(self.tripleyellows[i]) < 3:
+                    removeset.add(pos)
+                if pos.count(self.tripleyellows[i]) == 3:
+                    for j in range(len(self.greenletters)):
+                        if self.tripleyellows[i] == self.greenletters[j]:
+                            removeset.add(pos)
+        
+        # removes all elements from self.possible that are in the set
+        for removal in removeset:
+            if removal in self.possible:
+                self.possible.remove(removal)
+        
+        
+
+                
+
+
+
+
+
+
+
+
+                    
+
+
+
+
 
         
         
