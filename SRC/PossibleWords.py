@@ -1,4 +1,4 @@
-import SRC.WordGuess as WordGuess
+import WordGuess as WordGuess
 # defines the list of possible words left from the wordle dictionary given the results of all the previous guesses
 class PossibleWords:
     

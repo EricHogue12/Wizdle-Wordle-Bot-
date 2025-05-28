@@ -1,4 +1,4 @@
-import SRC.ValidWords as ValidWords
+import ValidWords as ValidWords
 
 # class which deals with the guesses that the user enters in that they made and which letters are yellow, green, or grey
 class WordGuess:
@@ -30,10 +30,8 @@ class WordGuess:
     def valid_word(self):
         validWords = ValidWords.ValidWords().validWS
         word1 = self.wordS
-        if word1 in validWords:
-            return True
-        else:
-            return False
+        if not word1 in validWords:
+            raise ValueError("user word guess should be a real word")
         
     
 

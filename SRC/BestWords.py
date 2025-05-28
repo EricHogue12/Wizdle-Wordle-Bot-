@@ -2,16 +2,16 @@ import random
 import heapq
 
 # class that generates an object containing the best five words in the tuple to use as the starting wordle word
-class FirstWords:
+class BestWords:
 
     
     # creates FirstWord object which is one of the five best words to use
     def __init__(self, words):
-        mylist = self.goodFirstWords(words)
-        self.first = random.choice(mylist)
+        mylist = self.goodWords(words)
+        self.suggestion = random.choice(mylist)
         
     # returns list of five best first words using the list returned by frequencies method
-    def goodFirstWords(self, words: tuple):
+    def goodWords(self, words):
         # list of frequencies
         freq1 = self.frequencies(words)
 
@@ -26,7 +26,7 @@ class FirstWords:
 
 
     # returns a list of total frequencies for each word
-    def frequencies(self, words: tuple):
+    def frequencies(self, words):
         # list 1 is list of letter frequencies for the 1st letter of wordle words
         # respectively works for list2, list3, list4, list5
         list1 = self.count_letters(words, 0)
@@ -315,7 +315,7 @@ class FirstWords:
                 
     
     #returns list of letter frequencies for the ith position of wordle words (index 0 of list is how many times A occurs)
-    def count_letters(self, words: tuple, i: int):
+    def count_letters(self, words, i: int):
         acount = 0
         bcount = 0
         ccount = 0

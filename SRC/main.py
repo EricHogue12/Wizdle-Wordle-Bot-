@@ -1,6 +1,7 @@
 import WordleTuple as WordleTuple
-import FirstWords as FirstWords
+import BestWords as BestWords
 import WordGuess as WordGuess
+import PossibleWords as PossibleWords
 
 class mainClass:
 
@@ -9,19 +10,47 @@ class mainClass:
         
         print("Welcome to Wizdle")
         print("Enter the guesses you make as five letter words and the results you get as five b,y, and g's where b is black (no color),y is yellow, and g is green. EXAMPLE: audio YBBGB")
-        word1 = FirstWords.FirstWords(wordList.data)
-        print("Your first recommended word is: " + word1.first)
-        wordguess1 = input("Enter your first guess here: ")
-        results1 = input("Enter your first results here: ")
-        try:
-            guess1 = WordGuess.WordGuess(wordguess1.lower(), results1.lower())
-        except Exception as e:
-            print(e)
-            quit()
-        if guess1.valid_word() == False:
-            print("Please enter a valid five letter word")
-            quit()
-        print("hehe")
+
+        # the list of possible words left
+        poss1 = PossibleWords.PossibleWords(wordList.data)
+
+        wordfound = False
+        counter = 0
+        while wordfound == False:
+
+            if counter >= 6:
+                print("It seems you have run out of turns.")
+                quit()
+
+            if len(poss1.possible) == 1:
+                print("The winning word should be: " + poss1.possible[0])
+                quit()
+
+            if len(poss1.possible) == 0:
+                print("Somehow the system has messed up. Sorry about that.")
+                quit()
+            
+            word1 = BestWords.BestWords(poss1.possible)
+            print("Your recommended word is: " + word1.suggestion)
+            while True:
+                try:
+                    wordguess1 = input("Enter your guess here: ")
+                    results1 = input("Enter your results here: ")
+                    guess1 = WordGuess.WordGuess(wordguess1.lower(), results1.lower())
+                    guess1.valid_word()
+                except Exception as e:
+                    print(e)
+                    continue
+                else:
+                    break
+                
+            poss1.update_letters(guess1)
+            poss1.update_list()
+
+            counter += 1
+
+
+            
         
 
 
