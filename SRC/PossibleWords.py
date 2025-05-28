@@ -99,7 +99,6 @@ class PossibleWords:
         # removes all words from possible list that are not aligned with the green letters
         for i in range(len(self.greenletters)):
             for pos in self.possible:
-                print(self.greenletters[i])
                 if not self.greenletters[i] == pos[self.greenindices[i]]:
                     removeset.add(pos)
 

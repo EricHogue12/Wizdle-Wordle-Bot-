@@ -3,6 +3,7 @@ import BestWords as BestWords
 import WordGuess as WordGuess
 import PossibleWords as PossibleWords
 
+
 class mainClass:
 
     def main():
@@ -10,17 +11,16 @@ class mainClass:
         
         print("Welcome to Wizdle")
         print("Enter the guesses you make as five letter words and the results you get as five b,y, and g's where b is black (no color),y is yellow, and g is green. EXAMPLE: audio YBBGB")
+        print("Type q to quit the program at any time")
 
         # the list of possible words left
         poss1 = PossibleWords.PossibleWords(wordList.data)
 
         wordfound = False
         counter = 0
-        while wordfound == False:
+        while counter < 6:
 
-            if counter >= 6:
-                print("It seems you have run out of turns.")
-                quit()
+            print()
 
             if len(poss1.possible) == 1:
                 print("The winning word should be: " + poss1.possible[0])
@@ -35,7 +35,11 @@ class mainClass:
             while True:
                 try:
                     wordguess1 = input("Enter your guess here: ")
+                    if wordguess1 == "q":
+                        quit()
                     results1 = input("Enter your results here: ")
+                    if results1 == "q":
+                        quit()
                     guess1 = WordGuess.WordGuess(wordguess1.lower(), results1.lower())
                     guess1.valid_word()
                 except Exception as e:
@@ -48,13 +52,16 @@ class mainClass:
             poss1.update_list()
 
             counter += 1
+        
+        print("It seems that you have run out of turns.")
+        quit()
 
-
+    if __name__ == "__main__":
+        main()
             
         
 
 
 
-    if __name__ == "__main__":
-        main()
+    
 

@@ -2,11 +2,10 @@ import pytest
 import SRC.WordGuess as WordGuess
 
 def test_valid_word():
-    guess1 = WordGuess.WordGuess("money", "gbyby")
-    assert guess1.valid_word() == True
-
-    guess2 = WordGuess.WordGuess("yollo", "bybyb")
-    assert guess2.valid_word() == False
+    
+    guess = WordGuess.WordGuess("yolol", "bybyb")
+    with pytest.raises(ValueError, match="user word guess should be a real word"):
+        guess.valid_word()
 
 def test_constructor():
     # valid cases
