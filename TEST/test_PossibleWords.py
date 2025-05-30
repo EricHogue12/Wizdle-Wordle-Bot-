@@ -33,31 +33,32 @@ def test_update_letters():
     poss1.update_letters(guess3)
     assert len(poss1.greenletters) == 2
     assert len(poss1.blackletters) == 8
-    # testing yellow letter duplicate case
-    guess4 = WordGuess.WordGuess("serum", "bbyby")
+    # singleletter list case
+    guess4 = WordGuess.WordGuess("boost", "bybbb")
     poss1.update_letters(guess4)
-    assert len(poss1.yellowletters) == 2
-
-    # testing duplicate letters where some are yellow and others are black
+    assert len(poss1.singleletters) == 1
+    assert len(poss1.yellowletters) == 4
+    assert poss1.singleletters[0] == "o"
+    guess5 = WordGuess.WordGuess("sweep", "bbgbb")
+    poss1.update_letters(guess5)
+    assert len(poss1.singleletters) == 2
+    assert len(poss1.yellowletters) == 5
+    assert poss1.singleletters[1] == "e"
+    
+    # double letter and triple letter test cases
     poss2 = PossibleWords.PossibleWords(("flock", "donut", "shale"))
-    guess5 = WordGuess.WordGuess("goooe", "bybbb")
-    poss2.update_letters(guess5)
-    assert len(poss2.blackletters) == 2
-    assert poss2.blackletters[1] == "e"
-    assert len(poss2.yellowletters) == 3
-    assert poss2.yellowletters[1] == "o"
-    assert poss2.yellowindices[1] == 2
+    guess6 = WordGuess.WordGuess("moron", "bybyb")
+    poss2.update_letters(guess6)
+    assert len(poss2.doubleletters) == 1
+    guess7 = WordGuess.WordGuess("beret", "bgbyb")
+    poss2.update_letters(guess7)
+    assert len(poss2.doubleletters) == 2
 
-    # testing multiple yellows functionality
-    poss3 = PossibleWords.PossibleWords(("flock", "donut", "shale"))
-    guess6 = WordGuess.WordGuess("digit", "bybyg")
-    poss3.update_letters(guess6)
-    assert len(poss3.doubleyellows) == 1
-    assert poss3.doubleyellows[0] == "i"
-    guess7 = WordGuess.WordGuess("moron", "bybyb")
-    poss3.update_letters(guess7)
-    assert len(poss3.doubleyellows) == 2
-    assert len(poss3.tripleyellows) == 0
+    guess8 = WordGuess.WordGuess("ababa", "gbgby")
+    poss2.update_letters(guess8)
+    assert len(poss2.tripleletters) == 1
+
+
 
 
 def test_update_list():
@@ -75,28 +76,38 @@ def test_update_list():
     poss2.update_list()
     assert len(poss2.possible) == 1
 
-    # test for special case where they do not have a yellow letter in a spot other than a green spot
-    poss3 = PossibleWords.PossibleWords(("coral", "motor", "boone"))
-    guess3 = WordGuess.WordGuess("goose", "bgybb")
+
+    # test for case of duplicate yellows
+    poss3 = PossibleWords.PossibleWords(("coral", "motor", "taboo"))
+    guess3 = WordGuess.WordGuess("goose", "byybb")
     poss3.update_letters(guess3)
     poss3.update_list()
     assert len(poss3.possible) == 1
 
-    # test for case of duplicate yellows
-    poss4 = PossibleWords.PossibleWords(("coral", "motor", "taboo"))
-    guess4 = WordGuess.WordGuess("goose", "byybb")
+    # test for black + yellow case
+    poss4 = PossibleWords.PossibleWords(("coral", "motor", "tabbo"))
+    guess4 = WordGuess.WordGuess("oxxxo", "ybbbb")
     poss4.update_letters(guess4)
     poss4.update_list()
     assert len(poss4.possible) == 1
-    
-    # test for case of duplicate yellows where there is a green
-    poss5 = PossibleWords.PossibleWords(("radar",))
-    guess5 = WordGuess.WordGuess("error", "byybg")
+
+    # multiple guesses
+    poss5 = PossibleWords.PossibleWords(("abcde", "abxyz", "xxbyd", "bcxza", "dabcz", "yaaaa"))
+    guess5 = WordGuess.WordGuess("agggg", "ybbbb")
     poss5.update_letters(guess5)
-    print(poss5.greenletters)
-    print(poss5.greenindices)
     poss5.update_list()
-    assert len(poss5.possible) == 0
+    assert len(poss5.possible) == 3
+
+    guess6 = WordGuess.WordGuess("gaggg", "bgbbb")
+    poss5.update_letters(guess6)
+    poss5.update_list()
+    assert len(poss5.possible) == 2
+
+    guess7 = WordGuess.WordGuess("aaggg", "ygbbb")
+    poss5.update_letters(guess7)
+    poss5.update_list()
+    assert len(poss5.possible) == 1
+    
 
 
 

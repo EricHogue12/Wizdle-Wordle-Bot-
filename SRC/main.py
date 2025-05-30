@@ -23,14 +23,16 @@ class mainClass:
             print()
 
             if len(poss1.possible) == 1:
+                print()
                 print("The winning word should be: " + poss1.possible[0])
                 quit()
 
             if len(poss1.possible) == 0:
+                print()
                 print("Somehow the system has messed up. Sorry about that.")
                 quit()
             
-            word1 = BestWords.BestWords(poss1.possible)
+            word1 = BestWords.BestWords(wordList.data, poss1.possible)
             print("Your recommended word is: " + word1.suggestion)
             while True:
                 try:
@@ -46,13 +48,14 @@ class mainClass:
                     print(e)
                     continue
                 else:
-                    break
-                
+                    break    
             poss1.update_letters(guess1)
             poss1.update_list()
+            print(poss1.possible)
 
             counter += 1
         
+        print()
         print("It seems that you have run out of turns.")
         quit()
 

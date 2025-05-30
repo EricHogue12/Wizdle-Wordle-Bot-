@@ -1,3 +1,4 @@
+# change to SRC.WordGuess as WordGuess to allow for unit testing
 import WordGuess as WordGuess
 # defines the list of possible words left from the wordle dictionary given the results of all the previous guesses
 class PossibleWords:
@@ -16,16 +17,22 @@ class PossibleWords:
         self.greenindices = []
         self.yellowindices = []
 
-        # lists that keep track of any double/triple yellow letters
-        self.doubleyellows = []
-        self.tripleyellows = []
+        # list keeps track of single/double/triple letters
+        self.singleletters = []
+        self.doubleletters = []
+        self.tripleletters = []
 
 
     # updates letters for the variables of the object
     def update_letters(self, guess: WordGuess):
+
+        currentyellows = []
+        currentgreens = []
+
         # updates new green letters
         for i in range(5):
             if guess.colorS[i] == "g":
+                currentgreens.append(guess.wordS[i])
                 # if the letter in the guess is already a green letter in the list
                 if guess.wordS[i] in self.greenletters:
                     dup = False
@@ -43,7 +50,6 @@ class PossibleWords:
         
         
         
-        currentyellows = []
 
         # updates new yellow letters
         for i in range(5):
@@ -64,27 +70,43 @@ class PossibleWords:
                     self.yellowletters.append(guess.wordS[i])
                     self.yellowindices.append(i)
         
-        # for special case where there are multiple yellows of the same letter
-        for i in range(len(currentyellows)):
-            if currentyellows.count(currentyellows[i]) == 2:
-                if not currentyellows[i] in self.doubleyellows:
-                    self.doubleyellows.append(currentyellows[i])
-            if currentyellows.count(currentyellows[i]) == 3:
-                if not currentyellows[i] in self.tripleyellows:
-                    self.tripleyellows.append(currentyellows[i])
-            
-
-            
-
+        # updates doubleletter and tripleletter lists
+        for i in range(5):
+            if currentgreens.count(guess.wordS[i]) == 2:
+                if currentyellows.count(guess.wordS[i]) == 1:
+                    if not guess.wordS[i] in self.tripleletters:
+                        self.tripleletters.append(guess.wordS[i])
+                if currentyellows.count(guess.wordS[i]) == 0:
+                    if not guess.wordS[i] in self.doubleletters:
+                        self.doubleletters.append(guess.wordS[i])
+            if currentgreens.count(guess.wordS[i]) == 1:
+                if currentyellows.count(guess.wordS[i]) == 2:
+                    if not guess.wordS[i] in self.tripleletters:
+                        self.tripleletters.append(guess.wordS[i])
+                if currentyellows.count(guess.wordS[i]) == 1:
+                    if not guess.wordS[i] in self.doubleletters:
+                        self.doubleletters.append(guess.wordS[i])
+            if currentgreens.count(guess.wordS[i]) == 0:
+                if currentyellows.count(guess.wordS[i]) == 2:
+                    if not guess.wordS[i] in self.doubleletters:
+                        self.doubleletters.append(guess.wordS[i])
 
         # updates new black letters
         for i in range(5):
             if guess.colorS[i] == "b":
                 # for special case where there are duplicate letters in guess where one is yellow and others are black
                 # a duplicate letter that is black after a yellow should be treated as a yellow at the certain index
+                # a duplicate letter that is black after a green should be treated as a yellow at the certain index
                 if guess.wordS[i] in currentyellows:
                     self.yellowletters.append(guess.wordS[i])
                     self.yellowindices.append(i)
+                    if not guess.wordS[i] in self.singleletters:
+                        self.singleletters.append(guess.wordS[i])
+                elif guess.wordS[i] in self.greenletters:
+                    self.yellowletters.append(guess.wordS[i])
+                    self.yellowindices.append(i)
+                    if not guess.wordS[i] in self.singleletters:
+                        self.singleletters.append(guess.wordS[i])
                 else:
                     if not guess.wordS[i] in self.blackletters:
                         self.blackletters.append(guess.wordS[i])
@@ -123,43 +145,26 @@ class PossibleWords:
                     removeset.add(pos)
 
 
-        # special case (2 duplicate letters in guess where one is correctly placed and the other is misplaced)
-        # removes all words from possible list that only have the yellow letter in a green square
-        for i in range(len(self.yellowletters)):
-            for pos in self.possible:
-                if pos.count(self.yellowletters[i]) == 1:
-                    for j in range(len(self.greenletters)):
-                        if self.yellowletters[i] == self.greenletters[j]:
-                            removeset.add(pos)
-
-        # special case: duplicate yellows
-        # removes all words that do not have the necessary amount of the yellow letters
-        # checks for yellows that are being counted as greens
+        # removes all words that do not have the necessary amount of letters in the doubleletter or tripleletter lists
         
-        for i in range(len(self.doubleyellows)):
+        for i in range(len(self.doubleletters)):
             for pos in self.possible:
-                if pos.count(self.doubleyellows[i]) < 2:
+                if not pos.count(self.doubleletters[i]) >= 2:
                     removeset.add(pos)
-                if pos.count(self.doubleyellows[i]) == 2:
-                    for j in range(len(self.greenletters)):
-                        if self.doubleyellows[i] == self.greenletters[j]:
-                            removeset.add(pos)
-                counter = 0
-                if pos.count(self.doubleyellows[i]) > 2:
-                    for j in range(len(self.greenletters)):
-                        if self.doubleyellows[i] == self.greenletters[j]:
-                            counter += 1
-                    if (counter > 1):
-                        removeset.add(pos)
 
-        for i in range(len(self.tripleyellows)):
+        for i in range(len(self.tripleletters)):
             for pos in self.possible:
-                if pos.count(self.tripleyellows[i]) < 3:
+                if not pos.count(self.tripleletters[i]) >= 3:
                     removeset.add(pos)
-                if pos.count(self.tripleyellows[i]) == 3:
-                    for j in range(len(self.greenletters)):
-                        if self.tripleyellows[i] == self.greenletters[j]:
-                            removeset.add(pos)
+        
+        # removes all words that have more than one of letters in the list singleletters
+
+        for i in range(len(self.singleletters)):
+            for pos in self.possible:
+                if pos.count(self.singleletters[i]) > 1:
+                    removeset.add(pos)
+        
+        
         
         # removes all elements from self.possible that are in the set
         for removal in removeset:
