@@ -8,7 +8,7 @@ class BestWords:
     # creates FirstWord object which is one of the five best words to use
     def __init__(self, words, possible):
         mylist = self.goodWords(words, possible)
-        self.suggestion = random.choice(mylist)
+        self.suggestion = mylist
         
     # returns list of five best first words using the list returned by frequencies method
     def goodWords(self, words, possible):
